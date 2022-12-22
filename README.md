@@ -2,7 +2,8 @@
 ![OpenAI_Logo svg](https://user-images.githubusercontent.com/36357298/209082746-d8c28f9c-4fc3-4917-a904-73a8f0d1630b.png)
 
 
-# open-ai-image-generation
+# Idea-Image
+open-ai-image-generation - 
 Sample Android project utilizing Open AI image generation API
 
 
