@@ -1,7 +1,11 @@
 package com.ahmed.openaigeneratedimage.activity;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.DialogInterface;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.View;
@@ -11,6 +15,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.ahmed.openaigeneratedimage.R;
 import com.ahmed.openaigeneratedimage.async.GenerateImageRequest;
@@ -22,6 +27,7 @@ public class MainActivity extends AppCompatActivity {
     private Button generateBtn;
     private GenerateImageRequest generateImageRequest;
     private String imaheUrl = "";
+    private AlertDialog.Builder builder;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,5 +65,32 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        if(isNetworkAvailable() == false){
+            showNoConnectionAlert();
+        }
+
     }
+
+    private boolean isNetworkAvailable() {
+        ConnectivityManager connectivityManager
+                = (ConnectivityManager) getSystemService(this.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetworkInfo = connectivityManager != null ? connectivityManager.getActiveNetworkInfo() : null;
+        return activeNetworkInfo != null && activeNetworkInfo.isConnected();
+    }
+
+    private void showNoConnectionAlert(){
+        builder = new AlertDialog.Builder(this);
+        builder.setCancelable(false);
+        builder.setIcon(android.R.drawable.ic_dialog_alert)
+            .setTitle("Error")
+            .setMessage("No Internet connection")
+            .setPositiveButton("ok", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i) {
+                    finish();
+                }
+            })
+            .show();
+    }
+
 }
