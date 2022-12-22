@@ -36,7 +36,8 @@
             <ImageView
                 android:id="@+id/generatedImg"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
+                android:layout_height="match_parent"
+                android:background="@drawable/waiting">
             </ImageView>
 
         </androidx.appcompat.widget.LinearLayoutCompat>
