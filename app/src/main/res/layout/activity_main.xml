@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.appcompat.widget.LinearLayoutCompat
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@drawable/ai"
+    tools:context=".activity.MainActivity">
+
+    <androidx.appcompat.widget.LinearLayoutCompat
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="20dp"
+        android:padding="10dp"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:text="Use your imagination and describe a photo to be generated"
+            android:textColor="@color/white"
+            android:textColorHighlight="@color/black"
+            android:layout_weight="1.2">
+        </TextView>
+
+
+        <androidx.appcompat.widget.LinearLayoutCompat
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/white"
+            android:layout_marginBottom="10dp"
+            android:layout_weight=".33">
+
+            <ImageView
+                android:id="@+id/generatedImg"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+            </ImageView>
+
+        </androidx.appcompat.widget.LinearLayoutCompat>
+
+        <EditText
+            android:id="@+id/promptEt"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:padding="9dp"
+            android:textSize="15sp"
+            android:textColor="@color/black"
+            android:hint="type your image description"
+            android:textColorHint="@color/black"
+            android:singleLine="true"
+            android:imeOptions="actionDone"
+            android:background="@color/white"
+            android:layout_weight="1.1">
+        </EditText>
+
+        <Button
+            android:id="@+id/generateBtn"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:text="Generate">
+
+        </Button>
+
+    </androidx.appcompat.widget.LinearLayoutCompat>
+
+
+
+
+
+
+
+
+
+</androidx.appcompat.widget.LinearLayoutCompat>
