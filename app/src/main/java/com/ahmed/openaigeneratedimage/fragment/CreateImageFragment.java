@@ -54,7 +54,7 @@ public class CreateImageFragment extends Fragment {
         });
         generateBtn = (Button) view.findViewById(R.id.generateBtn);
 
-        generateImageRequest = new GenerateImageRequest(getActivity().getBaseContext());
+        generateImageRequest = new GenerateImageRequest(getActivity());
 
         generateBtn.setOnClickListener(new View.OnClickListener() {
             @Override

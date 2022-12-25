@@ -6,6 +6,7 @@ import android.util.Log;
 
 import com.ahmed.openaigeneratedimage.R;
 import com.ahmed.openaigeneratedimage.fragment.CreateImageFragment;
+import com.ahmed.openaigeneratedimage.util.Constants;
 import com.android.volley.AuthFailureError;
 import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
@@ -30,9 +31,8 @@ public class GenerateImageRequest {
 
     private RequestQueue mRequestQueue;
     private StringRequest mStringRequest;
-    private String url = "https://api.openai.com/v1/images/generations";
+
     private Context ctx;
-    private final String token = "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";
     private String imgUrl = "";
     private ProgressDialog progressDialog;
 
@@ -59,7 +59,7 @@ public class GenerateImageRequest {
 
 
 
-        JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST, url, js, new Response.Listener<JSONObject>() {
+        JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST, Constants.GENERATE_IMAGE_URL, js, new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
                 if (!response.equals(null)) {
@@ -111,7 +111,7 @@ public class GenerateImageRequest {
             public Map<String, String> getHeaders() throws AuthFailureError {
                 Map<String, String> params = new HashMap<String, String>();
                 params.put("Content-Type", "application/json");
-                params.put("Authorization", "Bearer "+token);
+                params.put("Authorization", "Bearer "+ Constants.API_KEY);
                 return params;
             }
 
