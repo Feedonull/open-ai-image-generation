@@ -32,7 +32,7 @@ public class GenerateImageRequest {
     private StringRequest mStringRequest;
     private String url = "https://api.openai.com/v1/images/generations";
     private Context ctx;
-    private final String token = "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";
+    private final String token = "";// Your API Key goes here
     private String imgUrl = "";
     private ProgressDialog progressDialog;
 
