@@ -14,3 +14,5 @@ https://user-images.githubusercontent.com/36357298/209082917-1d9fc070-47a0-4ffa-
 Create an OpenAI API account [OpenAI API Page](https://beta.openai.com " OpenAI API Page")
 
 Create an API key, and paste it into GenerateImageRequest.java file, on the token line
+
+[![GoogleAppStore](https://user-images.githubusercontent.com/36357298/209472293-068f18e2-c5e7-4ddc-a712-c4eed9214b7d.jpg)](https://play.google.com/store/apps/details?id=com.ahmed.openaigeneratedimage)
