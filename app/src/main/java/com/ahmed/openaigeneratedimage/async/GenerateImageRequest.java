@@ -5,7 +5,7 @@ import android.content.Context;
 import android.util.Log;
 
 import com.ahmed.openaigeneratedimage.R;
-import com.ahmed.openaigeneratedimage.activity.MainActivity;
+import com.ahmed.openaigeneratedimage.fragment.CreateImageFragment;
 import com.android.volley.AuthFailureError;
 import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
@@ -32,7 +32,7 @@ public class GenerateImageRequest {
     private StringRequest mStringRequest;
     private String url = "https://api.openai.com/v1/images/generations";
     private Context ctx;
-    private final String token = "";// Your API Key goes here
+    private final String token = "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";
     private String imgUrl = "";
     private ProgressDialog progressDialog;
 
@@ -78,7 +78,7 @@ public class GenerateImageRequest {
                                 load(imgUrl)
                                 .thumbnail(Glide.with(ctx).load(R.drawable.waiting))
                                 .fitCenter()
-                                .into(MainActivity.generatedImg);
+                                .into(CreateImageFragment.generatedImg);
 
                         progressDialog.cancel();
                     } catch (JSONException e) {

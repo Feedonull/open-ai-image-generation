@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/mobile_navigation"
+    app:startDestination="@+id/navigation_create_image_from_text">
+
+    <fragment
+        android:id="@+id/navigation_create_image_from_text"
+        android:name="com.ahmed.openaigeneratedimage.fragment.CreateImageFragment"
+        android:label="@string/title_create_image_from_text"
+        tools:layout="@layout/fragment_create_image" />
+
+    <fragment
+        android:id="@+id/navigation_edit_image"
+        android:name="com.ahmed.openaigeneratedimage.fragment.EditImageFragment"
+        android:label="@string/title_edit_image"
+        tools:layout="@layout/fragment_edit_image" />
+
+
+</navigation>
