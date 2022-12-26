@@ -1,5 +1,7 @@
 package com.ahmed.openaigeneratedimage.fragment;
 
+import static android.app.Activity.RESULT_CANCELED;
+import static android.app.Activity.RESULT_OK;
 import static com.ahmed.openaigeneratedimage.util.Constants.CAMERA_PERMISSION_CODE;
 import static com.ahmed.openaigeneratedimage.util.Constants.READ_STORAGE_PERMISSION_CODE;
 import static com.ahmed.openaigeneratedimage.util.Constants.WRITE_STORAGE_PERMISSION_CODE;
@@ -12,10 +14,16 @@ import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
 import android.Manifest;
+import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.database.Cursor;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -86,7 +94,9 @@ public class EditImageFragment extends Fragment implements View.OnClickListener 
             checkPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE, Constants.WRITE_STORAGE_PERMISSION_CODE);
             checkPermission(Manifest.permission.READ_EXTERNAL_STORAGE, Constants.READ_STORAGE_PERMISSION_CODE);
 
-            
+            selectImage(getActivity());
+
+
         }
     }
 
@@ -114,6 +124,40 @@ public class EditImageFragment extends Fragment implements View.OnClickListener 
             }
         }
 
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if(resultCode != RESULT_CANCELED) {
+            switch (requestCode) {
+                case 0:
+                    if (resultCode == RESULT_OK && data != null) {
+                        Bitmap selectedImage = (Bitmap) data.getExtras().get("data");
+                        editImageGeneratedImg.setImageBitmap(selectedImage);
+                    }
+
+                    break;
+                case 1:
+                    if (resultCode == RESULT_OK && data != null) {
+                        Uri selectedImage =  data.getData();
+                        String[] filePathColumn = {MediaStore.Images.Media.DATA};
+                        if (selectedImage != null) {
+                            Cursor cursor = getActivity().getContentResolver().query(selectedImage,
+                                    filePathColumn, null, null, null);
+                            if (cursor != null) {
+                                cursor.moveToFirst();
+
+                                int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
+                                String picturePath = cursor.getString(columnIndex);
+                                editImageGeneratedImg.setImageBitmap(BitmapFactory.decodeFile(picturePath));
+                                cursor.close();
+                            }
+                        }
+
+                    }
+                    break;
+            }
+        }
+    }
+
     public void checkPermission(String permission, int requestCode) {
         if (ContextCompat.checkSelfPermission(getActivity(), permission) == PackageManager.PERMISSION_DENIED) {
             ActivityCompat.requestPermissions(getActivity(), new String[]{permission}, requestCode);
@@ -121,4 +165,32 @@ public class EditImageFragment extends Fragment implements View.OnClickListener 
 
         }
     }
+
+    private void selectImage(Context context) {
+        final CharSequence[] options = { "Take Photo", "Choose from Gallery","Cancel" };
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        builder.setTitle("Choose image");
+
+        builder.setItems(options, new DialogInterface.OnClickListener() {
+
+            @Override
+            public void onClick(DialogInterface dialog, int item) {
+
+                if (options[item].equals("Take Photo")) {
+                    Intent takePicture = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
+                    startActivityForResult(takePicture, 0);
+
+                } else if (options[item].equals("Choose from Gallery")) {
+                    Intent pickPhoto = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                    startActivityForResult(pickPhoto , 1);
+
+                } else if (options[item].equals("Cancel")) {
+                    dialog.dismiss();
+                }
+            }
+        });
+        builder.show();
+    }
+
 }
