@@ -23,6 +23,7 @@ import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Matrix;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -222,7 +223,25 @@ public class EditImageFragment extends Fragment implements View.OnClickListener 
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return BitmapFactory.decodeFile(imageFile.getAbsolutePath());
+        return resizedBitmap(BitmapFactory.decodeFile(imageFile.getAbsolutePath()),1024,1024);
+        //return BitmapFactory.decodeFile(imageFile.getAbsolutePath());
+    }
+
+    private Bitmap resizedBitmap(Bitmap bm, int newWidth, int newHeight) {
+        int width = bm.getWidth();
+        int height = bm.getHeight();
+        float scaleWidth = ((float) newWidth) / width;
+        float scaleHeight = ((float) newHeight) / height;
+        // CREATE A MATRIX FOR THE MANIPULATION
+        Matrix matrix = new Matrix();
+        // RESIZE THE BIT MAP
+        matrix.postScale(scaleWidth, scaleHeight);
+
+        // "RECREATE" THE NEW BITMAP
+        Bitmap resizedBitmap = Bitmap.createBitmap(
+                bm, 0, 0, width, height, matrix, false);
+        bm.recycle();
+        return resizedBitmap;
     }
 
 }
