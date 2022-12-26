@@ -3,7 +3,9 @@ package com.ahmed.openaigeneratedimage.fragment;
 import static android.app.Activity.RESULT_CANCELED;
 import static android.app.Activity.RESULT_OK;
 import static com.ahmed.openaigeneratedimage.util.Constants.CAMERA_PERMISSION_CODE;
+import static com.ahmed.openaigeneratedimage.util.Constants.CHOOSE_FROM_GALLERY_REQUEST_CODE;
 import static com.ahmed.openaigeneratedimage.util.Constants.READ_STORAGE_PERMISSION_CODE;
+import static com.ahmed.openaigeneratedimage.util.Constants.TAKE_PHOTO_REQUEST_CODE;
 import static com.ahmed.openaigeneratedimage.util.Constants.WRITE_STORAGE_PERMISSION_CODE;
 
 import androidx.annotation.NonNull;
@@ -23,6 +25,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.provider.MediaStore;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -40,6 +43,9 @@ import com.ahmed.openaigeneratedimage.R;
 import com.ahmed.openaigeneratedimage.async.GenerateImageRequest;
 import com.ahmed.openaigeneratedimage.util.Constants;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 
 public class EditImageFragment extends Fragment implements View.OnClickListener {
@@ -128,26 +134,30 @@ public class EditImageFragment extends Fragment implements View.OnClickListener 
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if(resultCode != RESULT_CANCELED) {
             switch (requestCode) {
-                case 0:
+                case TAKE_PHOTO_REQUEST_CODE:
                     if (resultCode == RESULT_OK && data != null) {
                         Bitmap selectedImage = (Bitmap) data.getExtras().get("data");
                         editImageGeneratedImg.setImageBitmap(selectedImage);
                     }
 
                     break;
-                case 1:
+                case CHOOSE_FROM_GALLERY_REQUEST_CODE:
                     if (resultCode == RESULT_OK && data != null) {
                         Uri selectedImage =  data.getData();
                         String[] filePathColumn = {MediaStore.Images.Media.DATA};
                         if (selectedImage != null) {
-                            Cursor cursor = getActivity().getContentResolver().query(selectedImage,
-                                    filePathColumn, null, null, null);
+                            Cursor cursor = getActivity().getContentResolver().query(selectedImage, filePathColumn, null, null, null);
                             if (cursor != null) {
                                 cursor.moveToFirst();
 
                                 int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
                                 String picturePath = cursor.getString(columnIndex);
                                 editImageGeneratedImg.setImageBitmap(BitmapFactory.decodeFile(picturePath));
+                                try {
+                                    editImageGeneratedImg.setImageBitmap(convertToPNG(BitmapFactory.decodeFile(picturePath)));
+                                } catch (IOException e) {
+                                    e.printStackTrace();
+                                }
                                 cursor.close();
                             }
                         }
@@ -179,11 +189,11 @@ public class EditImageFragment extends Fragment implements View.OnClickListener 
 
                 if (options[item].equals("Take Photo")) {
                     Intent takePicture = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
-                    startActivityForResult(takePicture, 0);
+                    startActivityForResult(takePicture, TAKE_PHOTO_REQUEST_CODE);
 
                 } else if (options[item].equals("Choose from Gallery")) {
                     Intent pickPhoto = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-                    startActivityForResult(pickPhoto , 1);
+                    startActivityForResult(pickPhoto , CHOOSE_FROM_GALLERY_REQUEST_CODE);
 
                 } else if (options[item].equals("Cancel")) {
                     dialog.dismiss();
@@ -191,6 +201,28 @@ public class EditImageFragment extends Fragment implements View.OnClickListener 
             }
         });
         builder.show();
+    }
+
+    private Bitmap convertToPNG(Bitmap image) throws IOException {
+
+        File storageDir = Environment.getExternalStoragePublicDirectory(
+                Environment.DIRECTORY_PICTURES);
+        File imageFile = File.createTempFile(
+                "newImage",  /* prefix */
+                ".png",         /* suffix */
+                storageDir      /* directory */
+        );
+
+        FileOutputStream outStream = null;
+        try {
+            outStream = new FileOutputStream(imageFile);
+            image.compress(Bitmap.CompressFormat.PNG, 100, outStream);
+            outStream.flush();
+            outStream.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return BitmapFactory.decodeFile(imageFile.getAbsolutePath());
     }
 
 }

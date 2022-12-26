@@ -9,4 +9,7 @@ public class Constants {
     public static final int WRITE_STORAGE_PERMISSION_CODE = 101;
     public static final int READ_STORAGE_PERMISSION_CODE = 102;
 
+    public static final int TAKE_PHOTO_REQUEST_CODE = 0;
+    public static final int CHOOSE_FROM_GALLERY_REQUEST_CODE = 1;
+
 }
