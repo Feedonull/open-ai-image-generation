@@ -61,7 +61,7 @@ public class CreateImageFragment extends Fragment {
             public void onClick(View view) {
                 if(promptEt.getText().toString().length() > 0){
 
-                    generateImageRequest.send(promptEt.getText().toString());
+                    generateImageRequest.createImage(promptEt.getText().toString());
 
                 }else{
                     promptEt.setError("Add image description");

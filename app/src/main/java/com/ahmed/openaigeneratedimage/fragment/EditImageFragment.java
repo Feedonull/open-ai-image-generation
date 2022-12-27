@@ -41,6 +41,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.ahmed.openaigeneratedimage.R;
+import com.ahmed.openaigeneratedimage.async.EditImageRequest;
 import com.ahmed.openaigeneratedimage.async.GenerateImageRequest;
 import com.ahmed.openaigeneratedimage.util.Constants;
 
@@ -55,12 +56,11 @@ public class EditImageFragment extends Fragment implements View.OnClickListener 
     public static ImageView editImageGeneratedImg;
     private EditText editImagepromptEt;
     private Button editImagegenerateBtn;
-    private GenerateImageRequest generateImageRequest;
+    private EditImageRequest editImageRequest;
     private String imaheUrl = "";
     private AlertDialog.Builder builder;
+    private Bitmap image;
 
-    private Bitmap myBitmap;
-    private Uri picUri;
 
     private ArrayList permissionsToRequest;
     private ArrayList permissionsRejected = new ArrayList();
@@ -88,6 +88,9 @@ public class EditImageFragment extends Fragment implements View.OnClickListener 
             }
         });
         editImagegenerateBtn = (Button) view.findViewById(R.id.edit_image_generateBtn);
+        editImagegenerateBtn.setOnClickListener(this);
+
+        editImageRequest = new EditImageRequest(getActivity());
 
 
 
@@ -100,10 +103,16 @@ public class EditImageFragment extends Fragment implements View.OnClickListener 
             checkPermission(Manifest.permission.CAMERA, CAMERA_PERMISSION_CODE);
             checkPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE, Constants.WRITE_STORAGE_PERMISSION_CODE);
             checkPermission(Manifest.permission.READ_EXTERNAL_STORAGE, Constants.READ_STORAGE_PERMISSION_CODE);
-
             selectImage(getActivity());
+        }
+        if(view.getId() == R.id.edit_image_generateBtn){
+            if(editImagepromptEt.getText().toString().length() > 0){
 
+                editImageRequest.editImage(editImagepromptEt.getText().toString(),image );
 
+            }else{
+                editImagepromptEt.setError("Add image description");
+            }
         }
     }
 
@@ -153,9 +162,15 @@ public class EditImageFragment extends Fragment implements View.OnClickListener 
 
                                 int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
                                 String picturePath = cursor.getString(columnIndex);
-                                editImageGeneratedImg.setImageBitmap(BitmapFactory.decodeFile(picturePath));
+                                //editImageGeneratedImg.setImageBitmap(BitmapFactory.decodeFile(picturePath));
                                 try {
-                                    editImageGeneratedImg.setImageBitmap(convertToPNG(BitmapFactory.decodeFile(picturePath)));
+                                    image = convertToPNG(BitmapFactory.decodeFile(picturePath));
+                                    if(image.getByteCount() /1024 / 1024 <= 4){
+                                        editImageGeneratedImg.setImageBitmap(image);
+                                    }else{
+                                        Toast.makeText(getActivity(),"File size is greater than 4MB",Toast.LENGTH_LONG).show();
+                                    }
+
                                 } catch (IOException e) {
                                     e.printStackTrace();
                                 }

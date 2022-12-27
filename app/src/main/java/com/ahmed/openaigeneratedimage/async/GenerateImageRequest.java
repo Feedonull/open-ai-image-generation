@@ -40,7 +40,7 @@ public class GenerateImageRequest {
         this.ctx = ctx;
     }
 
-    public String send(String prompt) {
+    public String createImage(String prompt) {
 
         progressDialog = new ProgressDialog(ctx, R.style.MyAlertDialogStyle);
         progressDialog.setMessage("Please wait...\nThis might take somtime");
